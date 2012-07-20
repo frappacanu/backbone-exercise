@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FrappCloud</title>
+  <script src="js/jquery-1.7.js"></script>
+  <script src="js/underscore.js"></script>
+  <script src="js/backbone.js"></script>
+  <script src="js/backbone.localStorage.js"></script>
+  <script src="//connect.soundcloud.com/sdk.js"></script>
+</head>
+
+<body>
+  <article id="frappcloud">
+    <header>
+      <h1>FrappCloud</h1>
+      <h2>Create and manage your playlists</h2>
+    </header>
+    
+    <section id="search-results">
+      
+    </section>
+    
+    <section id="playlists-container">
+      <form id="create-playlist">
+        <input type="text" name="title" placeholder="Title of your playlist">
+        <textarea name="description" placeholder="Describe your playlist in few words"></textarea>
+        <input type="text" name="tracks">
+        <button type="submit">Create Playlist</button>
+      </form>
+
+      <ul id="playlists">
+        
+      </ul>
+    </section>
+  </article>
+
+  <script type="text/template" id="playlist-template">
+    <article>
+      <div class="view">
+        <h3><%= title %></h3>
+        <p><%= description %></p>
+      </div>
+      <div class="edit">
+        <form class="edit-playlist">
+          <h3><input type="text" name="title" value="<%= title %>"></h3>
+          <p><textarea name="description"><%= description %></textarea></p>
+          <button type="submit">Edit Playlist</button>
+        </form>
+      </div>
+      <ul>
+        <%= tracks %>
+      </ul>
+      <a class="destroy">Delete Playlist</a>
+    </article>
+  </script>
+
+  
+
+  <script src="js/playlists.js"></script>
+  <script src="js/playlist.js"></script>
+  <script>
+    var frapp = new FrappCloud;
+  
+    SC.initialize({
+      client_id: "6b31723478aaf7f7358de19cf38334d6"
+    });
+    // SC.stream("/tracks/48907624", function(sound){
+    //       sound.play();
+    //     });
+  </script>
+</body>
+</html>
