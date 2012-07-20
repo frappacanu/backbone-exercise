@@ -18,8 +18,8 @@ var FrappCloud = Backbone.View.extend({
     this.addAll();
   },
 
-  appendPlaylist: function(todo) {
-    var view = new PlaylistView({model: todo});
+  appendPlaylist: function(playlist) {
+    var view = new PlaylistView({model: playlist});
     this.$("#playlists").append(view.render().el);
   },
 
