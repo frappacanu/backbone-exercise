@@ -35,7 +35,6 @@ var FrappCloud = Backbone.View.extend({
   },
 
   searchTracks: function(event) {
-    var self = this;
     this.$("#search-results").html('');
     SC.get('/tracks', { q: this.searchTerm.val() }, function(tracks) {
       Tracks.add(tracks);
