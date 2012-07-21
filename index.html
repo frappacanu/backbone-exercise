@@ -15,9 +15,16 @@
       <h1>FrappCloud</h1>
       <h2>Create and manage your playlists</h2>
     </header>
-    
+    <nav id="tabs">
+      <ul>
+        <li><a href="#search-container">Search</a></li>
+        <li><a href="#playlists-container">Playlists</a></li>
+      </ul>
+    </nav>
     <section id="search-container">
-      <input type="text" placeholder="Search your tracks!">
+      <form id="search">
+        <input id="search-term" type="text" placeholder="Search your tracks!">
+      </form>
       <ul id="search-results">
         <!-- will load template -->
       </ul>
@@ -56,6 +63,20 @@
       <a class="destroy">Delete Playlist</a>
     </article>
   </script>
+  
+  <script type="text/template" id="search-result-template">
+    <article>
+      <h4><%= title %></h4>
+      <a tartget="_blank" href="<%= permalink %>">Permalink</a>
+      <a class="play" href="/tracks/<%= id %>">Play! :)</a>
+      <form class="add-to-playlist">
+        <select>
+          <%= playlists %>
+        </select>
+        <button>+</button>
+      </form>
+    </article>
+  </script>
 
   <script type="text/template" id="track-template">
     <article>
@@ -70,16 +91,11 @@
   <script src="js/track.js"></script>
   <script src="js/frappcloud.js"></script>
   <script>
-    var frapp = new FrappCloud;
-  
     SC.initialize({
       client_id: "6b31723478aaf7f7358de19cf38334d6"
     });
-    SC.get('/tracks', { q: 'coldplay' }, function(tracks) {
-      for (var i=0, l=tracks.length; i<l; i++) {
-        console.log(tracks[i])
-      }
-    });
+    var frapp = new FrappCloud;
+    
     // SC.stream("/tracks/48907624", function(sound){
     //   sound.play();
     // });
