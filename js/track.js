@@ -28,35 +28,6 @@ var TrackView = Backbone.View.extend({
     return this;
   },
 
-  clear: function() {
-    this.model.clear();
-  },
-  
-  play: function() {
-    console.log("playing");
-  }
-});
-
-var TrackAsSearchResultView = Backbone.View.extend({
-  tagName: "li",
-
-  template: _.template($('#search-result-template').html()),
-
-  events: {
-    "submit .add-to-playlist": "addToPlaylist",
-    "click a.play": "play"
-  },
-
-  initialize: function() {
-    this.model.bind('change', this.render, this);
-    this.model.bind('destroy', this.remove, this);
-  },
-
-  render: function() {
-    this.$el.html(this.template(this.model.toJSON()));
-    return this;
-  },
-
   addToPlaylist: function() {
     console.log("adding");
   },
@@ -66,6 +37,19 @@ var TrackAsSearchResultView = Backbone.View.extend({
       sound.play();
     });
     event.preventDefault();
+  },
+  
+  clear: function() {
+    this.model.clear();
+  }
+});
+
+var TrackAsSearchResultView = TrackView.extend({
+  template: _.template($('#search-result-template').html()),
+
+  events: {
+    "submit .add-to-playlist": "addToPlaylist",
+    "click a.play": "play"
   }
 });
 

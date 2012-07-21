@@ -20,8 +20,8 @@ var FrappCloud = Backbone.View.extend({
     this.addAll();
   },
 
-  appendPlaylist: function(playlist) {
-    var view = new PlaylistView({model: playlist});
+  appendPlaylist: function(obj) {
+    var view = new PlaylistView({model: obj});
     this.$("#playlists").append(view.render().el);
   },
 
@@ -44,8 +44,8 @@ var FrappCloud = Backbone.View.extend({
     event.preventDefault();
   },
 
-  displaySearchResult: function(track) {
-    var view = new TrackAsSearchResultView({model: track});
+  displaySearchResult: function(obj) {
+    var view = new TrackAsSearchResultView({model: obj});
     this.$("#search-results").append(view.render().el);
   }
 });
