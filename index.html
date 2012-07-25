@@ -2,40 +2,43 @@
 <html>
 <head>
   <title>FrappCloud</title>
+  
+  <!-- Mobile viewport optimized -->
+  <meta name="viewport" content="width=device-width">
+
+  <link rel="stylesheet" href="css/reset.css"></link>
+  <link rel="stylesheet" href="css/main.css"></link>
+  <link rel="stylesheet" href="css/header.css"></link>
   <script src="js/lib/jquery-1.7.js"></script>
   <script src="js/lib/underscore.js"></script>
   <script src="js/lib/backbone.js"></script>
   <script src="js/lib/backbone.localStorage.js"></script>
   <script src="//connect.soundcloud.com/sdk.js"></script>
+  <script src="js/lib/api.js"></script>
 </head>
 
-<body>
-  <article id="frappcloud">
-    <header>
-      <h1>FrappCloud</h1>
-      <h2>Create and manage your playlists</h2>
-    </header>
-    <iframe width="100%" height="166" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F48907624&show_artwork=true"></iframe>
+<body id="frappcloud">
+  <header id="header">
+    <h1>FrappCloud</h1>
+    <p>Create and manage your playlists. Locally.</p>
     <nav id="tabs">
       <ul>
+        <li class="current"><a href="#playlists-container">Playlists</a></li>
         <li><a href="#search-container">Search</a></li>
-        <li><a href="#playlists-container">Playlists</a></li>
+        <li><a href="#about-container">About</a></li>
       </ul>
     </nav>
-    <section id="search-container">
-      <form id="search">
-        <input id="search-term" type="text" placeholder="Search your tracks!">
-      </form>
-      <ul id="search-results">
-        <!-- will load template -->
-      </ul>
-    </section>
-    
+  </header>
+  <article id="main" role="main">
+
     <section id="playlists-container">
-      <form id="create-playlist">
-        <input type="text" name="title" placeholder="Title of your playlist">
-        <textarea name="description" placeholder="Describe your playlist in few words"></textarea>
-        <input type="text" name="tracks">
+      <form id="create-playlist" class="box playlist-form">
+        <dl>
+          <dt><label for="create-pl-title">Title</label></dt>
+          <dd><input type="text" name="title" placeholder="Title of your playlist" maxlength="70"></dd>
+          <dt><label for="create-pl-description">Description</label></dt>
+          <dd><textarea name="description" placeholder="Describe your playlist in few words"></textarea></dd>
+        </dl>
         <button type="submit">Create Playlist</button>
       </form>
 
@@ -43,63 +46,84 @@
         <!-- will load template -->
       </ul>
     </section>
+
+    <section id="search-container" style="display: none">
+      <form id="search">
+        <label for="search-term">Search</label>
+        <input id="search-term" type="text" placeholder="Search your tracks!">
+        <button class="btn-ico search" type="submit"><span>Search</span></button>
+      </form>
+      <ul id="search-results">
+        <!-- will load template -->
+      </ul>
+    </section>
+
+    <section id="about-container" style="display: none">
+      <h2>About FrappCloud</h2>
+      <p>The application has been developed with backbone.js</p>
+    </section>
+
   </article>
 
   <script type="text/template" id="playlist-template">
-    <article>
+    <article class="playlist">
       <div class="view">
-        <h3><%= title %></h3>
+        <button class="btn-ico play play-list"><span>Play</span></button>
+        <button class="btn-ico edit"><span>Edit Playlist</span></button>
+        <button class="btn-ico destroy destroy-playlist"><span>Delete Playlist</span></button>
+        <h2><%= title %></h2>
         <p><%= description %></p>
       </div>
-      <div class="edit">
-        <form class="edit-playlist">
-          <h3><input type="text" name="title" value="<%= title %>"></h3>
-          <p><textarea name="description"><%= description %></textarea></p>
-          <button type="submit">Edit Playlist</button>
-        </form>
-      </div>
-      <ul>
-        <%= tracks %>
-      </ul>
-      <a class="destroy">Delete Playlist</a>
+      <form class="box edit-playlist playlist-form">
+        <dl>
+          <dt><label>Title</label></dt>
+          <dd><input type="text" name="title" value="<%= title %>" maxlength="70"></dd>
+          <dt><label>Description</label></dt>
+          <dd><textarea name="description"><%= description %></textarea></dd>
+        </dl>
+        <button type="submit">Edit Playlist</button>
+      </form>
+      <ul class="tracks"></ul>
     </article>
   </script>
-  
+
   <script type="text/template" id="search-result-template">
-    <article>
-      <h4><%= title %></h4>
-      <a tartget="_blank" href="<%= permalink %>">Permalink</a>
-      <a class="play" href="/tracks/<%= id %>">Play! :)</a>
-      <form class="add-to-playlist">
-        <select>
-          <%= playlists %>
-        </select>
-        <button>+</button>
-      </form>
+    <article class="track search-result-item">
+      <div class="box controls-bar">
+        <form class="add-to-playlist">
+          <select class="select-playlist"></select>
+          <button class="btn-ico add"><span>Add</span></button>
+        </form>
+        <div class="play-title">
+          <button class="btn-ico play" href="/tracks/<%= id %>"><span>Play</span></button>
+          <strong><%= title %></strong>
+          <a target="_blank" href="<%= permalink_url %>">(Permalink)</a>
+        </div>
+      </div>
+      <output class="embedded-player"></output>
     </article>
   </script>
 
   <script type="text/template" id="track-template">
-    <article>
-      <h4><%= title %></h4>
-      <a tartget="_blank" href="<%= permalink %>">Permalink</a>
-      <a class="play" href="/tracks/<%= id %>">Play! :)</a>
-      <a class="destroy">Delete Track</a>
+    <article class="track">
+      <div class="box controls-bar">
+        <button class="btn-ico destroy destroy-track"><span>Remove Track</span></button>
+        <div class="play-title">
+          <button class="btn-ico play" href="/tracks/<%= track_id %>"><span>Play</span></button>
+          <strong><%= title %></strong>
+          <a target="_blank" href="<%= permalink_url %>">(Permalink)</a>
+        </div>
+      </div>
+      <output class="embedded-player"></output>
     </article>
   </script>
-
-  <script src="js/playlist.js"></script>
+  
   <script src="js/track.js"></script>
+  <script src="js/playlist.js"></script>
   <script src="js/frappcloud.js"></script>
   <script>
-    SC.initialize({
-      client_id: "6b31723478aaf7f7358de19cf38334d6"
-    });
+    //instantiating application
     var frapp = new FrappCloud;
-    
-    // SC.stream("/tracks/48907624", function(sound){
-    //   sound.play();
-    // });
   </script>
 </body>
 </html>

@@ -2,18 +2,24 @@ var FrappCloud = Backbone.View.extend({
   el: $("#frappcloud"),
   
   events: {
-    "submit #create-playlist":  "createPlaylist",
-    "submit #search": "searchTracks"
+    "submit #create-playlist": "createPlaylist",
+    "submit #search": "searchTracks",
+    "click #tabs a": "switchSection"
   },
 
   initialize: function() {
+    SC.initialize({
+      client_id: "6b31723478aaf7f7358de19cf38334d6"
+    });
     this.searchTerm = $("#search-term");
     this.form = $("#create-playlist");
     this.title = this.form.find("input[name=title]");
     this.description = this.form.find("textarea[name=description]");
-    Playlists.bind('add', this.appendPlaylist, this);
+    Tracks.fetch();
     Playlists.bind('reset', this.appendAllPlaylists, this);
+    Playlists.bind('add', this.appendPlaylist, this);
     Playlists.fetch();
+
   },
   
   render: function() {
@@ -21,8 +27,8 @@ var FrappCloud = Backbone.View.extend({
   },
 
   appendPlaylist: function(obj) {
-    var view = new PlaylistView({model: obj});
-    this.$("#playlists").append(view.render().el);
+    obj.playlistView = new PlaylistView({model: obj});
+    this.$("#playlists").append(obj.playlistView.render().el);
   },
 
   appendAllPlaylists: function() {
@@ -30,21 +36,39 @@ var FrappCloud = Backbone.View.extend({
   },
 
   createPlaylist: function(event) {
-    Playlists.create({title: this.title.val(), description: this.description.val()});
+    var playlist = Playlists.create({title: this.title.val() || "Untitled", description: this.description.val()});
     event.preventDefault();
   },
 
   searchTracks: function(event) {
+    var SearchResults = new TrackCollection;
     this.$("#search-results").html('');
-    SC.get('/tracks', { q: this.searchTerm.val() }, function(tracks) {
-      Tracks.add(tracks);
+    SC.get('/tracks', { q: this.searchTerm.val(), limit: 10 }, function(tracks) {
+      if (tracks.length < 1) {
+        $("#search-results").append("<li>No results</li>");
+        return;
+      }
+      SearchResults.add(tracks);
+      SearchResults.each(function(track){
+        var view = new TrackAsSearchResultView({model: track});
+        $("#search-results").append(view.render().el);
+      });
     });
-    Tracks.bind('add', this.displaySearchResult, this);
     event.preventDefault();
   },
 
-  displaySearchResult: function(obj) {
-    var view = new TrackAsSearchResultView({model: obj});
-    this.$("#search-results").append(view.render().el);
+  switchSection: function(event) {
+    var sectionChooser = $(event.target);
+    $("#tabs li").removeClass("current")
+    sectionChooser.parent().addClass("current");
+    $("section").hide();
+    $(sectionChooser.attr("href")).show();
+    event.preventDefault();
   }
 });
+
+
+
+
+
+
