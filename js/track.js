@@ -78,8 +78,11 @@ var TrackAsSearchResultView = TrackView.extend({
 });
 
 var TrackCollection = Backbone.Collection.extend({
-  model: Track,
+  model: Track
+});
+
+var StoredTrackCollection = TrackCollection.extend({
   localStorage: new Store("sc-tracks")
 });
 
-var Tracks = new TrackCollection;
+var Tracks = new StoredTrackCollection;
