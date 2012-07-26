@@ -28,7 +28,7 @@ var TrackView = Backbone.View.extend({
   },
 
   play: function(event) {
-    SC.oEmbed(this.model.attributes.permalink_url, { auto_play: true }, this.$(".embedded-player")[0]);
+    SC.oEmbed(this.model.attributes.permalink_url, { auto_play: true }, this.$('.embedded-player')[0]);
     event.preventDefault();
   },
   
@@ -49,7 +49,7 @@ var TrackAsSearchResultView = TrackView.extend({
     this.$el.html(this.template(this.model.toJSON()));
     Playlists.each(_.bind(function(playlist){
       var view = new PlaylistAsSelectOptionView({model: playlist});
-      this.$el.find(".select-playlist").append(view.render().el);
+      this.$el.find('.select-playlist').append(view.render().el);
     }, this));
     Playlists.bind('add', this.appendOptionToSelect, this);
     return this;
@@ -57,14 +57,14 @@ var TrackAsSearchResultView = TrackView.extend({
 
   appendOptionToSelect: function(obj) {
     var view = new PlaylistAsSelectOptionView({model: obj});
-    this.$(".select-playlist").append(view.render().el);
+    this.$('.select-playlist').append(view.render().el);
   },
 
   addToPlaylist: function(event) {
     if (Playlists.length == 0) {
       Playlists.create({title: "Untitled", description: ""});
     }
-    var playlist_id = this.$(".select-playlist").val();
+    var playlist_id = this.$('.select-playlist').val();
 
     Tracks.create({
       playlist_id : playlist_id,
@@ -82,7 +82,7 @@ var TrackCollection = Backbone.Collection.extend({
 });
 
 var StoredTrackCollection = TrackCollection.extend({
-  localStorage: new Store("sc-tracks")
+  localStorage: new Store('sc-tracks')
 });
 
 var Tracks = new StoredTrackCollection;

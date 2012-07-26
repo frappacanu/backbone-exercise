@@ -1,5 +1,5 @@
 var FrappCloud = Backbone.View.extend({
-  el: $("#frappcloud"),
+  el: $('#frappcloud'),
   
   events: {
     "submit #create-playlist": "createPlaylist",
@@ -12,10 +12,10 @@ var FrappCloud = Backbone.View.extend({
     SC.initialize({
       client_id: "6b31723478aaf7f7358de19cf38334d6"
     });
-    this.searchTerm = $("#search-term");
-    this.form = $("#create-playlist");
-    this.title = this.form.find("input[name=title]");
-    this.description = this.form.find("textarea[name=description]");
+    this.searchTerm = $('#search-term');
+    this.form = $('#create-playlist');
+    this.title = this.form.find('input[name=title]');
+    this.description = this.form.find('textarea[name=description]');
     this.resultsContainer = this.$('#search-results');
     Tracks.fetch();
     Playlists.bind('reset', this.appendAllPlaylists, this);
@@ -30,7 +30,7 @@ var FrappCloud = Backbone.View.extend({
 
   appendPlaylist: function(obj) {
     obj.playlistView = new PlaylistView({model: obj});
-    this.$("#playlists").append(obj.playlistView.render().el);
+    this.$('#playlists').append(obj.playlistView.render().el);
   },
 
   appendAllPlaylists: function() {
@@ -46,7 +46,7 @@ var FrappCloud = Backbone.View.extend({
     var SearchResults = new TrackCollection;
     SC.get('/tracks', { q: this.searchTerm.val(), limit: 10, offset: this.offset }, _.bind(function(tracks) {
       if (tracks.length < 1) {
-        $("#search-results").append("<li>No results</li>");
+        this.resultsContainer.append('<li>No results</li>');
         return;
       }
       SearchResults.add(tracks);
@@ -65,16 +65,16 @@ var FrappCloud = Backbone.View.extend({
     this.offset = 0;
     this.resultsContainer.html('');
     this.searchTracks();
-    $("#load-more").remove();
+    $('#load-more').remove();
     event.preventDefault();
   },
 
   switchSection: function(event) {
     var sectionChooser = $(event.target);
-    $("#tabs li").removeClass("current")
-    sectionChooser.parent().addClass("current");
-    $("section").hide();
-    $(sectionChooser.attr("href")).show();
+    $('#tabs li').removeClass('current')
+    sectionChooser.parent().addClass('current');
+    $('section').hide();
+    $(sectionChooser.attr('href')).show();
     event.preventDefault();
   }
 });

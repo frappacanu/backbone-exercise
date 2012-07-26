@@ -41,7 +41,7 @@ var PlaylistView = Backbone.View.extend({
 
   render: function() {
     this.$el.html(this.template(this.model.toJSON()));
-    this.form = this.$(".edit-playlist");
+    this.form = this.$('.edit-playlist');
     this.appendAllTracks();
     return this;
   },
@@ -53,13 +53,13 @@ var PlaylistView = Backbone.View.extend({
   appendTrack: function(track) {
     if(track.attributes.playlist_id == this.model.id) {
       var trackView = new TrackView({model: track});
-      this.$(".tracks").append(trackView.render().el);
+      this.$('.tracks').append(trackView.render().el);
     }
   },
 
   edit: function(event) {
-    this.title = this.form.find("input[name=title]");
-    this.description = this.form.find("textarea[name=description]");
+    this.title = this.form.find('input[name=title]');
+    this.description = this.form.find('textarea[name=description]');
     this.form.hide();
     this.model.save({title: this.title.val(), description: this.description.val()});
     event.preventDefault();
@@ -70,22 +70,22 @@ var PlaylistView = Backbone.View.extend({
   },
 
   playAll: function(event) {
-    this.$(".play-list").toggleClass("playing");
-    this.$(".tracks").toggle();
+    this.$('.play-list').toggleClass('playing');
+    this.$('.tracks').toggle();
     if (this.model.tracks.models.length > 0) {
       this.playOne(0);
     }
   },
 
   playOne: function(index) {
-    var container = this.$(".embedded-player")[index];
+    var container = this.$('.embedded-player')[index];
     if (index > 0) {
-      $(this.$(".embedded-player")[index-1]).html("");
+      $(this.$('.embedded-player')[index-1]).html('');
     }
     SC.oEmbed(this.model.tracks.models[index].attributes.permalink_url, { auto_play: true }, _.bind(function(oEmbed) {
       container.innerHTML = oEmbed.html;
-      var widget = SC.Widget($(container).find("iframe")[0]);
-      widget.bind("finish", _.bind(function() {
+      var widget = SC.Widget($(container).find('iframe')[0]);
+      widget.bind('finish', _.bind(function() {
         if (this.model.tracks.models[index+1]) {
           this.playOne(index+1);
         }
@@ -110,7 +110,7 @@ var PlaylistAsSelectOptionView = PlaylistView.extend({
 
   render: function() {
     this.$el.html(this.model.attributes.title);
-    this.$el.attr("value", this.model.id);
+    this.$el.attr('value', this.model.id);
     return this;
   }
 });
@@ -118,7 +118,7 @@ var PlaylistAsSelectOptionView = PlaylistView.extend({
 var PlaylistCollection = Backbone.Collection.extend({
   model: Playlist,
   
-  localStorage: new Store("sc-playlists")
+  localStorage: new Store('sc-playlists')
 });
 
 var Playlists = new PlaylistCollection;
