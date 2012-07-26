@@ -201,6 +201,13 @@ SEARCH
   border-bottom: 0;
 }
 
+.load-more {
+  color: #F60;
+  display: block;
+  font-weight: bold;
+  text-align: center;
+}
+
 /***********************************
 CONTROLS BAR
 ***********************************/
