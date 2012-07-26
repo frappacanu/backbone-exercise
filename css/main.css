@@ -95,6 +95,17 @@ button {
   padding: 5px;
 }
 
+button:hover,
+button:active {
+  box-shadow: 0 0 3px #bfbfbf;
+}
+
+button:active {
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0.1,#FEFEFE),color-stop(0.9,#DFDFDF));
+  background-image: -moz-linear-gradient(center top,#FEFEFE 10%,#DFDFDF 90%);
+  background-image: -o-linear-gradient(#FEFEFE,#DFDFDF);
+}
+
 .btn-ico span {
   background: url(../img/sprite.png) no-repeat;
   display: block;
